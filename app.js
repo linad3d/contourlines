@@ -126,26 +126,28 @@ void main() {
     col *= (1.0 - amt) + amt * (0.35 + 1.15 * lit);
   }
 
-  // contour lines relative to the current sea level
-  float f = rel / uInterval;
-  float fadeMinor = 1.0 - smoothstep(0.30, 0.65, fwidth(f));
-  float fadeMajor = 1.0 - smoothstep(0.30, 0.65, fwidth(f) / 5.0);
-  vec3 lineCol = water ? vec3(0.23, 0.42, 0.58) : vec3(0.35, 0.27, 0.17);
-  col = mix(col, lineCol, lineAA(f, 1.0) * (water ? 0.20 : 0.26) * fadeMinor);
-  col = mix(col, lineCol, lineAA(f / 5.0, 1.25) * (water ? 0.36 : 0.45) * fadeMajor);
-
-  // coastline at the current sea level
-  float coast = 1.0 - smoothstep(0.0, 1.5, abs(rel) / max(fwidth(rel), 1e-7));
-  col = mix(col, vec3(0.05, 0.23, 0.42), coast * 0.75);
-
-  // flooded land (red) / newly exposed seabed (green)
+  // flooded land (deep water blue) / newly exposed seabed (green) — tinted
+  // before the contour pass so the new isobaths stay crisp on top
   if (uHighlight > 0.5) {
     float fw = max(fwidth(e), 1.0);
     float flooded = smoothstep(0.0, fw, e) * smoothstep(0.0, fw, -rel);
     float exposed = smoothstep(0.0, fw, -e) * smoothstep(0.0, fw, rel);
-    col = mix(col, vec3(0.86, 0.26, 0.20), flooded * 0.48);
+    col = mix(col, vec3(0.09, 0.26, 0.52), flooded * 0.50);
     col = mix(col, vec3(0.15, 0.65, 0.38), exposed * 0.40);
   }
+
+  // contour lines relative to the current sea level: isolines above the new
+  // shoreline, isobaths (shallow to deep) below it — including flooded land
+  float f = rel / uInterval;
+  float fadeMinor = 1.0 - smoothstep(0.30, 0.65, fwidth(f));
+  float fadeMajor = 1.0 - smoothstep(0.30, 0.65, fwidth(f) / 5.0);
+  vec3 lineCol = water ? vec3(0.16, 0.32, 0.50) : vec3(0.35, 0.27, 0.17);
+  col = mix(col, lineCol, lineAA(f, 1.0) * (water ? 0.24 : 0.26) * fadeMinor);
+  col = mix(col, lineCol, lineAA(f / 5.0, 1.25) * (water ? 0.40 : 0.45) * fadeMajor);
+
+  // coastline at the current sea level
+  float coast = 1.0 - smoothstep(0.0, 1.5, abs(rel) / max(fwidth(rel), 1e-7));
+  col = mix(col, vec3(0.05, 0.23, 0.42), coast * 0.75);
 
   if (uGraticule > 0.5) {
     vec2 gf = vLonLat / 15.0;
@@ -701,20 +703,70 @@ function main() {
   });
   applyLang();
 
-  function setSea(v, stopAnim = true) {
-    v = Math.min(8800, Math.max(-11000, v));
+  // Exponential slider: full planetary range, fine-grained near 0.
+  // slider x in [-1, 1]  ->  sea = sign(x) * (e^(k|x|) - 1)/(e^k - 1) * side,
+  // where side is the Challenger Deep (-11000 m) or Everest (+8848 m).
+  const SEA_MIN = -11000, SEA_MAX = 8848, SEA_K = 6;
+  const SEA_E = Math.exp(SEA_K) - 1;
+
+  function seaFromSlider(x) {
+    const side = x < 0 ? -SEA_MIN : SEA_MAX;
+    const v = Math.sign(x) * ((Math.exp(SEA_K * Math.abs(x)) - 1) / SEA_E) * side;
+    // magnetic detents: snap to the preset values when within ~one slider
+    // notch, so -120/0/+70 are reachable by dragging even where the
+    // exponential scale is coarser than the friendly rounding below
+    const notch = ((SEA_K * Math.exp(SEA_K * Math.abs(x))) / SEA_E) * side * 0.002;
+    for (const p of [-120, 0, 70]) {
+      if (Math.abs(v - p) < Math.max(0.5, 0.6 * notch)) return p;
+    }
+    const a = Math.abs(v);
+    const step = a >= 3000 ? 50 : a >= 1000 ? 10 : a >= 200 ? 5 : a >= 50 ? 1 : 0.5;
+    return Math.round(v / step) * step;
+  }
+
+  function sliderFromSea(v) {
+    const side = v < 0 ? -SEA_MIN : SEA_MAX;
+    const m = Math.min(1, Math.abs(v) / side);
+    return (Math.sign(v) * Math.log(1 + m * SEA_E)) / SEA_K;
+  }
+
+  function setSea(v, stopAnim = true, fromSlider = false) {
+    v = Math.min(SEA_MAX, Math.max(SEA_MIN, v));
     view.sea = v;
     if (stopAnim && seaAnim) { seaAnim = null; $('sea-play').textContent = '▶'; }
-    seaSlider.value = String(Math.min(150, Math.max(-150, v)));
+    // never write the thumb position back while the slider itself is the
+    // source — the rounding would undo small keyboard steps and wedge it
+    if (!fromSlider) seaSlider.value = String(sliderFromSea(v));
+    const label = `${v > 0 ? '+' : ''}${Math.round(v * 10) / 10} m`;
+    seaSlider.setAttribute('aria-valuetext', label);
     seaNum.value = String(Math.round(v * 10) / 10);
-    seaValue.textContent = `${v > 0 ? '+' : ''}${Math.round(v * 10) / 10} m`;
+    seaValue.textContent = label;
     document.querySelectorAll('.preset').forEach((b) => {
       b.classList.toggle('active', Math.abs(+b.dataset.sea - v) < 0.25);
     });
     dirty = true;
   }
 
-  seaSlider.addEventListener('input', () => setSea(+seaSlider.value));
+  // tick marks at exponential positions along the slider scale
+  {
+    const scale = $('sea-scale');
+    for (const v of [-10000, -3000, -1000, -300, -100, 0, 100, 300, 1000, 3000, 8000]) {
+      const t = document.createElement('span');
+      t.className = 'tick' + (v === 0 ? ' zero' : '');
+      const p = (sliderFromSea(v) + 1) / 2;
+      t.style.left = `calc(8.5px + (100% - 17px) * ${p.toFixed(4)})`;
+      t.title = `${v > 0 ? '+' : ''}${v} m`;
+      scale.appendChild(t);
+    }
+    const lo = document.createElement('b');
+    lo.textContent = `${SEA_MIN}`;
+    const hi = document.createElement('b');
+    hi.textContent = `+${SEA_MAX}`;
+    hi.style.right = '0';
+    scale.append(lo, hi);
+  }
+
+  seaSlider.addEventListener('input', () => setSea(seaFromSlider(+seaSlider.value), true, true));
   seaNum.addEventListener('change', () => setSea(+seaNum.value || 0));
   document.querySelectorAll('.preset').forEach((b) => {
     b.addEventListener('click', () => setSea(+b.dataset.sea));

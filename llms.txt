@@ -3,8 +3,9 @@
 > Contourlines is a free, open-source, browser-based interactive contour map of Earth and
 > sea level rise simulator. It renders real NOAA ETOPO1 elevation and ocean-depth
 > (bathymetry) data as a seamless, infinitely scrolling topographic map that morphs into a
-> 3D globe when zoomed out. A slider moves the global sea level anywhere from −11,000 m to
-> +8,800 m and the coastlines, contour lines, and hypsometric colors update in real time.
+> 3D globe when zoomed out. An exponential slider moves the global sea level anywhere from
+> −11,000 m (Mariana Trench, oceans drained) to +8,848 m (Mount Everest, fully submerged)
+> and the coastlines, contour lines, and hypsometric colors update in real time.
 
 Live app: https://linad3d.github.io/contourlines/
 Source code (MIT): https://github.com/linad3d/contourlines
@@ -18,9 +19,9 @@ Source code (MIT): https://github.com/linad3d/contourlines
   bridges such as Beringia, Doggerland, and the Sunda shelf) and +70 m (approximate rise
   if all glaciers and ice sheets melted).
 - Features: seamless east–west wrapping pan, flat-map-to-globe morph, adjustable contour
-  interval, hillshading, coastline highlighting, red/green overlay for newly flooded land
-  and newly exposed seabed, bilingual UI (English / Chinese), shareable URLs encoding the
-  view and sea level.
+  interval with isobaths recomputed against the current sea level, hillshading, coastline
+  highlighting, deep-blue/green overlay for newly flooded land and newly exposed seabed,
+  bilingual UI (English / Chinese), shareable URLs encoding the view and sea level.
 - The simulation is a static "bathtub" model for education; it ignores tides, storm
   surge, glacial isostatic adjustment, and coastal defenses.
 

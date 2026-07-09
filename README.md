@@ -8,7 +8,7 @@
 
 An interactive contour map of Earth built from real NOAA elevation & ocean-depth data —
 pan it endlessly, zoom out until it becomes a globe, and move the ocean anywhere from
-**−11,000 m to +8,800 m** while the coastlines redraw in real time.
+**−11,000 m to +8,848 m** while the coastlines redraw in real time.
 
 [**🌍 Open the live map →**](https://linad3d.github.io/contourlines/)
 
@@ -32,14 +32,17 @@ pan it endlessly, zoom out until it becomes a globe, and move the ocean anywhere
 topographic contour map: isolines, hypsometric tints, hillshading, coastlines. Underneath
 is a real elevation model (NOAA ETOPO1), so it doubles as a **sea level rise simulator**:
 
-- 🌊 **Drag the sea level slider** and watch coasts flood or drain instantly — from
-  Ice-Age lowstands to "all the ice melted" and far beyond.
+- 🌊 **Drag the sea level slider** and watch coasts flood or drain instantly. The scale is
+  exponential and spans the entire planet: from a bone-dry Mariana Trench (−11,000 m) to a
+  submerged Mount Everest (+8,848 m) — fine, meter-level control near today's coastline,
+  accelerating as you pull toward the extremes.
 - 🔁 **Seamless infinite panning** — the map wraps east–west with no seams, like spinning
   a paper map into a cylinder.
 - 🌐 **Flat map ⇆ globe morph** — zoom all the way out and the map rolls itself onto an
   orthographic globe, with an atmosphere glow and stars.
-- 🔴🟢 **Change highlighting** — newly flooded land is tinted red, newly exposed seabed
-  green, so the impact of every meter is obvious.
+- 🔵🟢 **Change highlighting** — newly flooded land turns deep water-blue with fresh
+  isobaths drawn below the new shoreline, newly exposed seabed is tinted green, so the
+  impact of every meter is obvious.
 - 📏 **Live elevation readout** — hover anywhere to see latitude, longitude, elevation,
   and how far under the new sea surface it is.
 - 🔗 **Shareable URLs** — the view, sea level, and options are encoded in the address bar.
@@ -53,7 +56,7 @@ two PNG heightmaps.
 
 | Sea level +70 m — the ice has melted | Sea level −120 m — the last Ice Age |
 | :--: | :--: |
-| ![World map with sea level raised 70 meters, flooded coastal land highlighted in red](assets/shot-melt.png) | ![World map with sea level lowered 120 meters, exposed continental shelf highlighted in green](assets/shot-iceage.png) |
+| ![World map with sea level raised 70 meters, newly flooded coastal land tinted deep water-blue with fresh isobaths](assets/shot-melt.png) | ![World map with sea level lowered 120 meters, exposed continental shelf highlighted in green](assets/shot-iceage.png) |
 
 | Contour detail with hillshading | Zoomed out to the globe |
 | :--: | :--: |
@@ -85,7 +88,7 @@ WebGL2 fragment shader      manual bilinear sampling → elevation field
                             • hypsometric tint relative to current sea level
                             • fwidth() anti-aliased contour lines & coastline
                             • screen-space hillshading
-                            • red/green flood & exposure overlays
+                            • blue/green flood & exposure overlays
 WebGL2 vertex shader        lon/lat grid projected as equirectangular map or
                             orthographic globe — blended for the zoom-out morph
 ```
@@ -135,9 +138,11 @@ opinions about that. Don't use it for engineering, insurance, or evacuation plan
 
 - 基于 NOAA ETOPO1 真实高程与海底地形数据（约 9 公里分辨率）；
 - 地图东西方向无缝循环拖拽，缩到最小时变成三维地球；
-- 拖动滑杆将海平面在 −11000 米到 +8800 米之间任意升降，海岸线实时重绘；
+- 指数刻度滑杆覆盖整个星球：从排干的马里亚纳海沟（−11000 米）到被淹没的珠穆朗玛峰
+  （+8848 米），近海岸精细到米、越往两端变化越快，海岸线实时重绘；被淹没的陆地呈现
+  深蓝色水面并生成新的等深线，新露出的海床标绿；
 - 预设场景：−120 米（末次冰盛期，白令陆桥、巽他陆架浮现）、+70 米（冰盖全部融化）；
-- 新淹没的陆地标红、新露出的海床标绿，悬停可读取任意位置的海拔；
+- 悬停可读取任意位置的海拔，以及相对当前海面的高度或深度；
 - 纯前端 WebGL2 实现，零依赖、无构建、无服务器、无跟踪，界面支持中英文切换。
 
 在线体验：**<https://linad3d.github.io/contourlines/>**

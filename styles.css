@@ -121,7 +121,7 @@ input[type="range"] {
   -webkit-appearance: none;
   height: 5px;
   border-radius: 3px;
-  background: linear-gradient(90deg, #2e5d8a, #35b6ff);
+  background: linear-gradient(90deg, #2fbf71 0%, #7fd4ff 50%, #123e77 100%);
   outline: none;
   cursor: pointer;
 }
@@ -160,6 +160,28 @@ select {
   padding: 5px 8px;
   font: inherit;
   cursor: pointer;
+}
+
+#sea-scale-row { margin-top: -5px; }
+.scale-spacer-l { width: 30px; flex: none; }
+.scale-spacer-r { width: 64px; flex: none; }
+#sea-scale { flex: 1; position: relative; height: 15px; }
+#sea-scale .tick {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 5px;
+  background: rgba(127, 212, 255, 0.35);
+}
+#sea-scale .tick.zero { height: 8px; background: rgba(127, 212, 255, 0.8); }
+#sea-scale b {
+  position: absolute;
+  top: 5px;
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--text-dim);
+  opacity: 0.8;
+  letter-spacing: 0.02em;
 }
 
 .presets { display: flex; gap: 7px; }

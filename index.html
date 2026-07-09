@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Contourlines — Interactive World Contour Map &amp; Sea Level Rise Simulator</title>
-  <meta name="description" content="Explore Earth as a seamless, infinitely scrolling contour map built from real NOAA elevation and ocean depth data. Drag the sea level from −120 m (Ice Age) to +70 m (all ice melted) and watch coastlines flood or drain in real time. Zoom out and the map morphs into a 3D globe.">
+  <meta name="description" content="Explore Earth as a seamless, infinitely scrolling contour map built from real NOAA elevation and ocean depth data. Drag the sea level anywhere from the Mariana Trench (−11,000 m) to Mount Everest (+8,848 m) — Ice Age coastlines at −120 m, all ice melted at +70 m — and watch the world redraw in real time. Zoom out and the map morphs into a 3D globe.">
   <meta name="keywords" content="sea level rise simulator, contour map, topographic map, world elevation map, flood map, bathymetry, interactive globe, climate change visualization, ETOPO, ice age sea level, terrain map, isoline map">
   <meta name="author" content="linad3d">
   <meta name="robots" content="index, follow, max-image-preview:large">
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Contourlines">
   <meta property="og:title" content="Contourlines — Drag the sea level, redraw the world">
-  <meta property="og:description" content="A seamless world contour map with real NOAA elevation + bathymetry data. Simulate sea level rise from −120 m to +70 m in real time, in your browser.">
+  <meta property="og:description" content="A seamless world contour map with real NOAA elevation + bathymetry data. Drag the sea level from a drained Mariana Trench (−11,000 m) to a submerged Everest (+8,848 m) and watch coastlines redraw in real time.">
   <meta property="og:url" content="https://linad3d.github.io/contourlines/">
   <meta property="og:image" content="https://linad3d.github.io/contourlines/assets/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -40,7 +40,7 @@
     "name": "Contourlines",
     "alternateName": "World Contour Map & Sea Level Simulator",
     "url": "https://linad3d.github.io/contourlines/",
-    "description": "Interactive world contour map with real NOAA ETOPO elevation and bathymetry data. Seamlessly pan an infinitely wrapping map, zoom out to a 3D globe, and simulate sea level rise or fall from −11,000 m to +9,000 m in real time.",
+    "description": "Interactive world contour map with real NOAA ETOPO elevation and bathymetry data. Seamlessly pan an infinitely wrapping map, zoom out to a 3D globe, and simulate sea level rise or fall — the exponential slider spans the full range from the Mariana Trench (−11,000 m) to Mount Everest (+8,848 m) in real time.",
     "applicationCategory": "EducationalApplication",
     "operatingSystem": "Any",
     "browserRequirements": "Requires WebGL2",
@@ -96,8 +96,9 @@
       <h1>Contourlines — Interactive World Contour Map &amp; Sea Level Rise Simulator</h1>
       <p>Contourlines renders real NOAA ETOPO elevation and bathymetry data as a seamless world
       contour map. Pan endlessly around the planet, zoom out until the map becomes a 3D globe, and
-      drag the sea level anywhere from −120 m (Ice Age coastlines and land bridges) to +70 m (all
-      ice melted) to watch the world's coastlines redraw in real time. This application requires
+      drag the sea level anywhere from −11,000 m (a drained Mariana Trench) to +8,848 m (a
+      submerged Mount Everest) — with Ice Age coastlines at −120 m and an all-ice-melted world at
+      +70 m — to watch the world's coastlines redraw in real time. This application requires
       JavaScript and WebGL2. The source code is available on
       <a href="https://github.com/linad3d/contourlines">GitHub</a>.</p>
     </section>
@@ -143,10 +144,15 @@
         </div>
         <div class="ctl-row">
           <button id="sea-play" class="icon-btn" title="Animate sea level" aria-label="Animate sea level">▶</button>
-          <input id="sea-slider" type="range" min="-150" max="150" step="0.5" value="0"
-                 aria-label="Sea level offset in meters">
-          <input id="sea-num" type="number" min="-11000" max="8800" step="1" value="0"
-                 aria-label="Sea level offset, exact value">
+          <input id="sea-slider" type="range" min="-1" max="1" step="0.002" value="0"
+                 aria-label="Sea level offset, exponential scale from the Mariana Trench to Mount Everest">
+          <input id="sea-num" type="number" min="-11000" max="8848" step="1" value="0"
+                 aria-label="Sea level offset in meters, exact value">
+        </div>
+        <div class="ctl-row" id="sea-scale-row" aria-hidden="true">
+          <span class="scale-spacer-l"></span>
+          <div id="sea-scale"></div>
+          <span class="scale-spacer-r"></span>
         </div>
         <div class="presets">
           <button class="preset" data-sea="-120"><b>−120 m</b><span data-i18n="iceAge">Ice Age</span></button>
@@ -208,9 +214,11 @@
         <ul>
           <li><strong>Drag</strong> to pan — the map wraps endlessly, east to west.</li>
           <li><strong>Scroll or pinch</strong> to zoom. Fully zoomed out, the map becomes a globe.</li>
-          <li><strong>Drag the sea level slider</strong> to raise or lower the ocean. Coastlines,
-          contour lines, and colors update instantly. Newly flooded land is tinted red, newly
-          exposed seabed green.</li>
+          <li><strong>Drag the sea level slider</strong> to raise or lower the ocean — the scale is
+          exponential, spanning the full planet from the Mariana Trench (−11,000 m, oceans fully
+          drained) to Mount Everest (+8,848 m, everything submerged). Coastlines, contour lines,
+          and colors update instantly: flooded land turns deep water-blue with fresh isobaths
+          below the new shoreline, and newly exposed seabed is tinted green.</li>
           <li>Try the presets: <strong>−120 m</strong> shows Ice Age coastlines with land bridges
           like Beringia and Doggerland; <strong>+70 m</strong> shows the world if all ice melted.</li>
         </ul>
@@ -251,8 +259,10 @@
         <ul>
           <li><strong>拖拽</strong>平移地图 —— 东西方向无限循环。</li>
           <li><strong>滚轮或双指捏合</strong>缩放。缩到最小时，地图变形为地球。</li>
-          <li><strong>拖动海平面滑杆</strong>升高或降低海面，海岸线、等高线和配色即时更新。
-          新淹没的陆地显示为红色，新露出的海床显示为绿色。</li>
+          <li><strong>拖动海平面滑杆</strong>升高或降低海面 —— 滑杆采用指数刻度，覆盖整个星球：
+          从马里亚纳海沟（−11000 米，海洋完全排干）到珠穆朗玛峰（+8848 米，全部淹没），越往两端
+          拖动变化越快。海岸线、等高线和配色即时更新：被淹没的陆地呈现深蓝色水面，并按新海面生成
+          等深线；新露出的海床显示为绿色。</li>
           <li>试试预设：<strong>−120 m</strong> 重现冰河时期的海岸线（白令陆桥、多格兰）；
           <strong>+70 m</strong> 展示所有冰盖融化后的世界。</li>
         </ul>
