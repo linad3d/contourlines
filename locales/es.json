@@ -1,0 +1,65 @@
+{
+  "name": "Español",
+  "dir": "ltr",
+  "ui": {
+    "tagline": "Arrastra el nivel del mar, redibuja el mundo",
+    "seaLevel": "Nivel del mar",
+    "iceAge": "Glaciación",
+    "today": "Hoy",
+    "allMelt": "Sin hielo",
+    "contourInterval": "Equidistancia",
+    "auto": "Auto",
+    "highlight": "Costa actual",
+    "hillshade": "Sombreado",
+    "graticule": "Cuadrícula",
+    "about": "Acerca de",
+    "loading": "Cargando terreno…",
+    "loadFail": "No se pudieron cargar los datos del terreno.",
+    "underWater": "bajo el agua",
+    "aboveSea": "sobre el mar",
+    "playTitle": "Animar el nivel del mar",
+    "sliderAria": "Desplazamiento del nivel del mar, escala exponencial desde la fosa de las Marianas hasta el monte Everest",
+    "numAria": "Desplazamiento del nivel del mar en metros, valor exacto",
+    "collapseTitle": "Contraer panel",
+    "zoomIn": "Acercar",
+    "zoomOut": "Alejar",
+    "globeView": "Vista de globo",
+    "closeAria": "Cerrar",
+    "langLabel": "Idioma",
+    "webglTitle": "Se requiere WebGL2",
+    "webglBody": "Contourlines necesita WebGL2 para renderizar el mapa. Usa una versión reciente de Chrome, Edge, Firefox o Safari y asegúrate de que la aceleración por hardware esté activada.",
+    "docTitle": "Contourlines — Mapa mundial interactivo de curvas de nivel y simulador del aumento del nivel del mar"
+  },
+  "about": {
+    "title": "Acerca de Contourlines",
+    "intro": "<strong>Contourlines</strong> es un <em>mapa interactivo de curvas de nivel de la Tierra</em> y un <em>simulador del aumento del nivel del mar</em>, gratuito y de código abierto. Renderiza datos reales de elevación y profundidad oceánica de la NOAA como un mapa topográfico clásico —isolíneas, tintas hipsométricas, sombreado de relieve— que se desplaza sin cortes alrededor del planeta y se transforma en un globo 3D al alejar la vista.",
+    "howTitle": "Cómo se usa",
+    "how": [
+      "<strong>Arrastra</strong> para desplazarte: el mapa da la vuelta sin fin, de este a oeste.",
+      "<strong>Haz scroll o pellizca</strong> para hacer zoom. Con el zoom al mínimo, el mapa se convierte en un globo.",
+      "<strong>Arrastra el control deslizante del nivel del mar</strong> para subir o bajar el océano: la escala es exponencial y abarca todo el planeta, desde la fosa de las Marianas (−11 000 m, con los océanos completamente vacíos) hasta el monte Everest (+8848 m, con todo sumergido). Las costas, las curvas de nivel y los colores hipsométricos se reajustan al instante a la nueva línea de agua, mientras una línea de referencia carmesí sigue marcando el trazado de la costa actual.",
+      "Prueba los valores predefinidos: <strong>−120 m</strong> muestra las costas de la última glaciación, con puentes de tierra como Beringia y Doggerland; <strong>+70 m</strong> muestra el mundo si se derritiera todo el hielo."
+    ],
+    "faqTitle": "Preguntas frecuentes",
+    "faq": [
+      {
+        "q": "¿Qué pasaría si se derritiera todo el hielo de la Tierra?",
+        "a": "El nivel del mar subiría unos 70 metros. Coloca el control deslizante en +70 m y observa cómo las regiones bajas —los Países Bajos, Bangladés, el delta del Nilo, Shanghái, el sur de Florida— desaparecen bajo la nueva línea de costa."
+      },
+      {
+        "q": "¿Cuál era el nivel del mar durante la última glaciación?",
+        "a": "Unos 120 metros más bajo que hoy. Con −120 m puedes caminar de Siberia a Alaska a través de Beringia, y Gran Bretaña se une a Europa a través de Doggerland."
+      },
+      {
+        "q": "¿Qué precisión tiene?",
+        "a": "Las elevaciones proceden del modelo de relieve global ETOPO1 de la NOAA, con una resolución de 5 minutos de arco (~9 km por celda). La simulación es un modelo estático de «bañera» con fines educativos: ignora las mareas, las marejadas ciclónicas, el rebote isostático y las defensas costeras."
+      },
+      {
+        "q": "¿Me rastrea o necesita un servidor?",
+        "a": "No. Todo se ejecuta localmente en tu navegador con WebGL2. Sin cookies, sin analíticas y sin cuentas."
+      }
+    ],
+    "dataTitle": "Datos y créditos",
+    "data": "Elevación y batimetría: <a href=\"https://www.ncei.noaa.gov/products/etopo-global-relief-model\" target=\"_blank\" rel=\"noopener\">NOAA ETOPO1 Global Relief Model</a> (dominio público), NOAA National Centers for Environmental Information. Código fuente: <a href=\"https://github.com/linad3d/contourlines\" target=\"_blank\" rel=\"noopener\">con licencia MIT en GitHub</a>."
+  }
+}

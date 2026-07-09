@@ -10,6 +10,18 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0a0f1e">
   <link rel="canonical" href="https://linad3d.github.io/contourlines/">
+  <link rel="alternate" hreflang="x-default" href="https://linad3d.github.io/contourlines/">
+  <link rel="alternate" hreflang="en" href="https://linad3d.github.io/contourlines/?lang=en">
+  <link rel="alternate" hreflang="zh-Hans" href="https://linad3d.github.io/contourlines/?lang=zh">
+  <link rel="alternate" hreflang="zh-Hant" href="https://linad3d.github.io/contourlines/?lang=zh-Hant">
+  <link rel="alternate" hreflang="ja" href="https://linad3d.github.io/contourlines/?lang=ja">
+  <link rel="alternate" hreflang="ko" href="https://linad3d.github.io/contourlines/?lang=ko">
+  <link rel="alternate" hreflang="es" href="https://linad3d.github.io/contourlines/?lang=es">
+  <link rel="alternate" hreflang="fr" href="https://linad3d.github.io/contourlines/?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://linad3d.github.io/contourlines/?lang=de">
+  <link rel="alternate" hreflang="pt" href="https://linad3d.github.io/contourlines/?lang=pt">
+  <link rel="alternate" hreflang="ru" href="https://linad3d.github.io/contourlines/?lang=ru">
+  <link rel="alternate" hreflang="ar" href="https://linad3d.github.io/contourlines/?lang=ar">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.webmanifest">
 
@@ -45,6 +57,7 @@
     "operatingSystem": "Any",
     "browserRequirements": "Requires WebGL2",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "inLanguage": ["en", "zh-Hans", "zh-Hant", "ja", "ko", "es", "fr", "de", "pt", "ru", "ar"],
     "screenshot": "https://linad3d.github.io/contourlines/assets/og-image.png",
     "author": { "@type": "Person", "name": "linad3d", "url": "https://github.com/linad3d" },
     "license": "https://github.com/linad3d/contourlines/blob/main/LICENSE",
@@ -184,7 +197,7 @@
       </section>
 
       <footer id="panel-foot">
-        <button id="lang" class="chip" title="切换语言 / Switch language">中文</button>
+        <select id="lang" title="Language" aria-label="Language"></select>
         <button id="about-btn" class="chip" data-i18n="about">About</button>
         <a class="chip" href="https://github.com/linad3d/contourlines" target="_blank" rel="noopener">GitHub ↗</a>
       </footer>
@@ -249,7 +262,7 @@
         on GitHub</a>.</p>
       </article>
 
-      <article data-lang="zh">
+      <article data-lang="zh" hidden>
         <h2>关于 Contourlines</h2>
         <p><strong>Contourlines</strong> 是一个免费开源的<em>交互式世界等高线地图</em>和<em>海平面升降模拟器</em>。
         它把 NOAA 真实的陆地高程与海底深度数据渲染成经典的地形图 —— 等高线、分层设色、山体阴影 ——
@@ -288,13 +301,16 @@
         源代码：<a href="https://github.com/linad3d/contourlines" target="_blank"
         rel="noopener">GitHub（MIT 协议）</a>。</p>
       </article>
+
+      <article id="about-dyn" hidden></article>
     </div>
   </div>
 
   <div id="webgl-error" class="glass" hidden>
-    <h2>WebGL2 required</h2>
-    <p>Contourlines needs WebGL2 to render the map. Please use a recent version of Chrome, Edge,
-    Firefox, or Safari, and make sure hardware acceleration is enabled.</p>
+    <h2 data-i18n="webglTitle">WebGL2 required</h2>
+    <p data-i18n="webglBody">Contourlines needs WebGL2 to render the map. Please use a recent
+    version of Chrome, Edge, Firefox, or Safari, and make sure hardware acceleration is
+    enabled.</p>
   </div>
 
   <script type="module" src="app.js"></script>

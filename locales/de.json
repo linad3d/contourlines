@@ -1,0 +1,65 @@
+{
+  "name": "Deutsch",
+  "dir": "ltr",
+  "ui": {
+    "tagline": "Zieh am Meeresspiegel und zeichne die Welt neu",
+    "seaLevel": "Meeresspiegel",
+    "iceAge": "Eiszeit",
+    "today": "Heute",
+    "allMelt": "Eisschmelze",
+    "contourInterval": "Höhenlinienabstand",
+    "auto": "Auto",
+    "highlight": "Heutige Küste",
+    "hillshade": "Schummerung",
+    "graticule": "Gitternetz",
+    "about": "Info",
+    "loading": "Gelände wird geladen…",
+    "loadFail": "Geländedaten konnten nicht geladen werden.",
+    "underWater": "unter Wasser",
+    "aboveSea": "über dem Meer",
+    "playTitle": "Meeresspiegel animieren",
+    "sliderAria": "Meeresspiegel-Verschiebung, exponentielle Skala vom Marianengraben bis zum Mount Everest",
+    "numAria": "Meeresspiegel-Verschiebung in Metern, exakter Wert",
+    "collapseTitle": "Panel einklappen",
+    "zoomIn": "Vergrößern",
+    "zoomOut": "Verkleinern",
+    "globeView": "Globusansicht",
+    "closeAria": "Schließen",
+    "langLabel": "Sprache",
+    "webglTitle": "WebGL2 erforderlich",
+    "webglBody": "Contourlines benötigt WebGL2, um die Karte darzustellen. Bitte verwende eine aktuelle Version von Chrome, Edge, Firefox oder Safari und stelle sicher, dass die Hardwarebeschleunigung aktiviert ist.",
+    "docTitle": "Contourlines — Interaktive Höhenlinien-Weltkarte & Simulator für den Meeresspiegelanstieg"
+  },
+  "about": {
+    "title": "Über Contourlines",
+    "intro": "<strong>Contourlines</strong> ist eine kostenlose, quelloffene <em>interaktive Höhenlinienkarte der Erde</em> und ein <em>Simulator für den Meeresspiegelanstieg</em>. Echte Höhen- und Meerestiefendaten der NOAA werden als klassische topografische Karte dargestellt – Isolinien, hypsometrische Farbstufen, Schummerung –, die sich nahtlos um den Planeten scrollen lässt und beim Herauszoomen zu einem 3D-Globus wird.",
+    "howTitle": "So funktioniert’s",
+    "how": [
+      "<strong>Ziehe</strong> die Karte, um sie zu verschieben – sie setzt sich von Ost nach West endlos fort.",
+      "<strong>Scrolle oder ziehe mit zwei Fingern</strong>, um zu zoomen. Ganz herausgezoomt wird die Karte zum Globus.",
+      "<strong>Ziehe den Meeresspiegel-Regler</strong>, um den Ozean anzuheben oder abzusenken – die Skala ist exponentiell und umspannt den ganzen Planeten vom Marianengraben (−11.000 m, Ozeane vollständig trockengelegt) bis zum Mount Everest (+8.848 m, alles überflutet). Küstenlinien, Höhenlinien und hypsometrische Farben passen sich sofort der neuen Wasserlinie an, während eine karminrote Referenzlinie weiterhin markiert, wo die heutige Küstenlinie verlief.",
+      "Probiere die Voreinstellungen: <strong>−120 m</strong> zeigt die eiszeitlichen Küstenlinien mit Landbrücken wie Beringia und dem Doggerland; <strong>+70 m</strong> zeigt die Welt, wenn alles Eis geschmolzen wäre."
+    ],
+    "faqTitle": "Häufige Fragen",
+    "faq": [
+      {
+        "q": "Was passiert, wenn das gesamte Eis der Erde schmilzt?",
+        "a": "Der Meeresspiegel würde um etwa 70 Meter steigen. Stelle den Regler auf +70 m und sieh zu, wie tief liegende Regionen – die Niederlande, Bangladesch, das Nildelta, Shanghai, Südflorida – unter der neuen Küstenlinie verschwinden."
+      },
+      {
+        "q": "Wie hoch war der Meeresspiegel während der letzten Eiszeit?",
+        "a": "Etwa 120 Meter niedriger als heute. Bei −120 m kannst du über Beringia von Sibirien nach Alaska laufen, und Großbritannien ist über das Doggerland mit Europa verbunden."
+      },
+      {
+        "q": "Wie genau ist das?",
+        "a": "Die Höhendaten stammen aus dem ETOPO1 Global Relief Model der NOAA mit einer Auflösung von 5 Bogenminuten (ca. 9 km pro Rasterzelle). Die Simulation ist ein statisches „Badewannenmodell“ für Bildungszwecke – Gezeiten, Sturmfluten, isostatische Landhebung und Küstenschutz bleiben unberücksichtigt."
+      },
+      {
+        "q": "Werde ich getrackt oder wird ein Server benötigt?",
+        "a": "Nein. Alles läuft lokal in deinem Browser mit WebGL2. Keine Cookies, keine Analyse-Dienste, keine Konten."
+      }
+    ],
+    "dataTitle": "Daten & Quellen",
+    "data": "Höhendaten & Bathymetrie: <a href=\"https://www.ncei.noaa.gov/products/etopo-global-relief-model\" target=\"_blank\" rel=\"noopener\">NOAA ETOPO1 Global Relief Model</a> (gemeinfrei), NOAA National Centers for Environmental Information. Quellcode: <a href=\"https://github.com/linad3d/contourlines\" target=\"_blank\" rel=\"noopener\">unter MIT-Lizenz auf GitHub</a>."
+  }
+}

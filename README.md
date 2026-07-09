@@ -47,7 +47,9 @@ is a real elevation model (NOAA ETOPO1), so it doubles as a **sea level rise sim
 - 📏 **Live elevation readout** — hover anywhere to see latitude, longitude, elevation,
   and how far under the new sea surface it is.
 - 🔗 **Shareable URLs** — the view, sea level, and options are encoded in the address bar.
-- 🇬🇧🇨🇳 **Bilingual UI** — English and 中文.
+- 🌐 **11-language UI, auto-detected** — English, 简体中文, 繁體中文, 日本語, 한국어,
+  Español, Français, Deutsch, Português, Русский, and العربية (with RTL layout). The app
+  follows your browser's language and remembers your choice.
 
 Everything runs in your browser with **WebGL2, zero dependencies, no build step, no
 server, no tracking** — the entire app is one HTML file, one stylesheet, one script, and
@@ -145,7 +147,8 @@ opinions about that. Don't use it for engineering, insurance, or evacuation plan
 - 全部配色与等高线以当前水面为零点统一重算：排干的海床会依相对高度呈现绿→黄→棕的
   完整分层设色，被淹没的陆地则成为真正的浅海；红色参考线始终标注今日海岸线原位置；
 - 悬停可读取任意位置的海拔，以及相对当前海面的高度或深度；
-- 纯前端 WebGL2 实现，零依赖、无构建、无服务器、无跟踪，界面支持中英文切换。
+- 纯前端 WebGL2 实现，零依赖、无构建、无服务器、无跟踪；界面支持 11 种语言
+  （简繁中文、英、日、韩、西、法、德、葡、俄、阿拉伯语），随浏览器语言自动切换。
 
 在线体验：**<https://linad3d.github.io/contourlines/>**
 

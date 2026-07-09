@@ -222,6 +222,17 @@ select {
   border-top: 1px solid rgba(127, 212, 255, 0.09);
   padding-top: 11px;
 }
+#lang {
+  border-radius: 999px;
+  font-size: 12px;
+  padding: 5px 8px;
+  max-width: 118px;
+  flex: none;
+}
+
+/* numeric scale keeps a fixed low-to-high direction even in RTL locales */
+#sea-slider, #sea-scale-row, .presets { direction: ltr; }
+#sea-value, #readout { direction: ltr; unicode-bidi: isolate; }
 .chip {
   padding: 5px 11px;
   border-radius: 999px;
@@ -309,8 +320,7 @@ select {
 #about-card li { margin-bottom: 5px; }
 #about-card dt { font-weight: 600; margin-top: 10px; }
 #about-card a { color: var(--accent); }
-body[data-lang="en"] article[data-lang="zh"] { display: none; }
-body[data-lang="zh"] article[data-lang="en"] { display: none; }
+#about-card article[hidden] { display: none; }
 
 /* ---------------- misc ---------------- */
 

@@ -1,0 +1,65 @@
+{
+  "name": "繁體中文",
+  "dir": "ltr",
+  "ui": {
+    "tagline": "拖曳海平面，重繪世界",
+    "seaLevel": "海平面",
+    "iceAge": "冰河期",
+    "today": "今日",
+    "allMelt": "冰蓋全融",
+    "contourInterval": "等高線間距",
+    "auto": "自動",
+    "highlight": "現今海岸線",
+    "hillshade": "地形陰影",
+    "graticule": "經緯線",
+    "about": "關於",
+    "loading": "正在載入地形…",
+    "loadFail": "地形資料載入失敗。",
+    "underWater": "低於海平面",
+    "aboveSea": "高於海平面",
+    "playTitle": "播放海平面動畫",
+    "sliderAria": "海平面升降值，採指數刻度，範圍從馬里亞納海溝到聖母峰",
+    "numAria": "海平面升降值，以公尺為單位的精確數值",
+    "collapseTitle": "收合面板",
+    "zoomIn": "放大",
+    "zoomOut": "縮小",
+    "globeView": "地球儀檢視",
+    "closeAria": "關閉",
+    "langLabel": "語言",
+    "webglTitle": "需要 WebGL2",
+    "webglBody": "Contourlines 需要 WebGL2 才能繪製地圖。請使用新版的 Chrome、Edge、Firefox 或 Safari，並確認已啟用硬體加速。",
+    "docTitle": "Contourlines — 互動式世界等高線地圖與海平面上升模擬器"
+  },
+  "about": {
+    "title": "關於 Contourlines",
+    "intro": "<strong>Contourlines</strong> 是一款免費、開放原始碼的<em>互動式地球等高線地圖</em>暨<em>海平面上升模擬器</em>。它以 NOAA 的真實高程與海洋深度資料，繪製出經典的地形圖——等值線、分層設色、地形陰影——地圖可無縫環繞整個地球捲動，完全縮小時還會化為 3D 地球儀。",
+    "howTitle": "使用方式",
+    "how": [
+      "<strong>拖曳</strong>即可平移——地圖東西向無限循環延伸。",
+      "<strong>捲動滾輪或雙指開合</strong>即可縮放。完全縮小後，地圖會變成地球儀。",
+      "<strong>拖曳海平面滑桿</strong>即可升高或降低海面——刻度採指數式，涵蓋整個地球，從馬里亞納海溝（−11,000 m，海水完全排乾）到聖母峰（+8,848 m，全境沒入水中）。海岸線、等高線與分層設色都會即時依新的水面重新繪製，同時一條深紅色參考線會持續標示今日海岸線的原本位置。",
+      "試試預設值：<strong>−120 m</strong> 呈現冰河期的海岸線，可見白令陸橋與多格蘭等陸橋；<strong>+70 m</strong> 則呈現冰全部融化後的世界。"
+    ],
+    "faqTitle": "常見問題",
+    "faq": [
+      {
+        "q": "如果地球上的冰全部融化，會發生什麼事？",
+        "a": "海平面將上升約 70 公尺。把滑桿設為 +70 m，就能看著低窪地區——荷蘭、孟加拉、尼羅河三角洲、上海、佛羅里達南部——消失在新的海岸線之下。"
+      },
+      {
+        "q": "上一次冰河期的海平面是多少？",
+        "a": "比今日低約 120 公尺。在 −120 m 時，你可以經由白令陸橋從西伯利亞步行到阿拉斯加，英國也會透過多格蘭與歐洲大陸相連。"
+      },
+      {
+        "q": "這個模擬有多準確？",
+        "a": "高程資料來自 NOAA 的 ETOPO1 全球地勢模型，解析度為 5 弧分（每格約 9 公里）。本模擬是供教育用途的靜態「浴缸」模型——不考慮潮汐、暴潮、地殼均衡回彈與海岸防護設施。"
+      },
+      {
+        "q": "它會追蹤我嗎？需要伺服器嗎？",
+        "a": "不會。一切都透過 WebGL2 在你的瀏覽器本機執行。沒有 Cookie、沒有分析追蹤，也不需要帳號。"
+      }
+    ],
+    "dataTitle": "資料與致謝",
+    "data": "高程與水深資料：<a href=\"https://www.ncei.noaa.gov/products/etopo-global-relief-model\" target=\"_blank\" rel=\"noopener\">NOAA ETOPO1 全球地勢模型</a>（公有領域），NOAA 國家環境資訊中心。原始碼：<a href=\"https://github.com/linad3d/contourlines\" target=\"_blank\" rel=\"noopener\">以 MIT 授權發布於 GitHub</a>。"
+  }
+}

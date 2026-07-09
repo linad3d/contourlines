@@ -18,24 +18,68 @@ const DEG_R = 57.29577951308232; // 180/pi: globe radius = scale(px/deg) * DEG_R
 
 // ------------------------------------------------------------------ i18n
 
-const I18N = {
+// Supported languages in picker order. English and Simplified Chinese ship
+// inline (instant first paint); the rest load on demand from locales/*.json.
+const LANGS = [
+  ['en', 'English'], ['zh', '简体中文'], ['zh-Hant', '繁體中文'], ['ja', '日本語'],
+  ['ko', '한국어'], ['es', 'Español'], ['fr', 'Français'], ['de', 'Deutsch'],
+  ['pt', 'Português'], ['ru', 'Русский'], ['ar', 'العربية'],
+];
+
+const LOCALES = {
   en: {
-    tagline: 'Drag the sea level, redraw the world',
-    seaLevel: 'Sea level', iceAge: 'Ice Age', today: 'Today', allMelt: 'Ice melted',
-    contourInterval: 'Contour interval', auto: 'Auto',
-    highlight: "Today's coastline", hillshade: 'Hillshade', graticule: 'Grid lines',
-    about: 'About', loading: 'Loading terrain…', loadFail: 'Failed to load terrain data.',
-    underWater: 'under water', aboveSea: 'above sea',
+    name: 'English', dir: 'ltr',
+    ui: {
+      tagline: 'Drag the sea level, redraw the world',
+      seaLevel: 'Sea level', iceAge: 'Ice Age', today: 'Today', allMelt: 'Ice melted',
+      contourInterval: 'Contour interval', auto: 'Auto',
+      highlight: "Today's coastline", hillshade: 'Hillshade', graticule: 'Grid lines',
+      about: 'About', loading: 'Loading terrain…', loadFail: 'Failed to load terrain data.',
+      underWater: 'under water', aboveSea: 'above sea',
+      playTitle: 'Animate sea level',
+      sliderAria: 'Sea level offset, exponential scale from the Mariana Trench to Mount Everest',
+      numAria: 'Sea level offset in meters, exact value',
+      collapseTitle: 'Collapse panel', zoomIn: 'Zoom in', zoomOut: 'Zoom out',
+      globeView: 'Globe view', closeAria: 'Close', langLabel: 'Language',
+      webglTitle: 'WebGL2 required',
+      webglBody: 'Contourlines needs WebGL2 to render the map. Please use a recent version of Chrome, Edge, Firefox, or Safari, and make sure hardware acceleration is enabled.',
+      docTitle: 'Contourlines — Interactive World Contour Map & Sea Level Rise Simulator',
+    },
   },
   zh: {
-    tagline: '拖动海平面，重绘世界',
-    seaLevel: '海平面', iceAge: '冰河期', today: '现今', allMelt: '冰盖融化',
-    contourInterval: '等高线间距', auto: '自动',
-    highlight: '今日海岸线', hillshade: '山体阴影', graticule: '经纬网',
-    about: '关于', loading: '正在加载地形…', loadFail: '地形数据加载失败。',
-    underWater: '低于海面', aboveSea: '高于海面',
+    name: '简体中文', dir: 'ltr',
+    ui: {
+      tagline: '拖动海平面，重绘世界',
+      seaLevel: '海平面', iceAge: '冰河期', today: '现今', allMelt: '冰盖融化',
+      contourInterval: '等高线间距', auto: '自动',
+      highlight: '今日海岸线', hillshade: '山体阴影', graticule: '经纬网',
+      about: '关于', loading: '正在加载地形…', loadFail: '地形数据加载失败。',
+      underWater: '低于海面', aboveSea: '高于海面',
+      playTitle: '播放海平面动画',
+      sliderAria: '海平面偏移，指数刻度，从马里亚纳海沟到珠穆朗玛峰',
+      numAria: '海平面偏移量（米），精确值',
+      collapseTitle: '折叠面板', zoomIn: '放大', zoomOut: '缩小',
+      globeView: '地球视图', closeAria: '关闭', langLabel: '语言',
+      webglTitle: '需要 WebGL2',
+      webglBody: 'Contourlines 需要 WebGL2 来渲染地图。请使用新版 Chrome、Edge、Firefox 或 Safari，并确保已开启硬件加速。',
+      docTitle: 'Contourlines — 交互式世界等高线地图与海平面模拟器',
+    },
   },
 };
+
+/** Map a BCP-47 tag to a supported locale code, or null. */
+function matchLocale(tag) {
+  if (!tag) return null;
+  const t = String(tag).toLowerCase().replace(/_/g, '-');
+  if (t === 'zh' || t.startsWith('zh-')) {
+    return /hant|-tw|-hk|-mo/.test(t) ? 'zh-Hant' : 'zh';
+  }
+  const exact = LANGS.find(([c]) => c.toLowerCase() === t);
+  if (exact) return exact[0];
+  const primary = t.split('-')[0];
+  const byPrimary = LANGS.find(([c]) => c.toLowerCase() === primary);
+  return byPrimary ? byPrimary[0] : null;
+}
 
 // ---------------------------------------------------------------- shaders
 
@@ -409,6 +453,8 @@ function main() {
   let interacted = params.has('lon') || params.has('z') || num('spin', 1) === 0;
   let dirty = true;
   let dataError = false;
+  let lang = 'en';
+  let dict = LOCALES.en.ui;
 
   const sMax = 140;
   const sMin = () => 0.44 * Math.min(vw, vh) / DEG_R;
@@ -673,7 +719,7 @@ function main() {
     const latS = `${Math.abs(ll[1]).toFixed(2)}°${ll[1] >= 0 ? 'N' : 'S'}`;
     const lonS = `${Math.abs(ll[0]).toFixed(2)}°${ll[0] >= 0 ? 'E' : 'W'}`;
     const rel = e - view.sea;
-    const s = I18N[lang];
+    const s = dict;
     const status = rel < 0
       ? ` · <b>${Math.round(-rel)} m</b> ${s.underWater}`
       : (view.sea !== 0 ? ` · <b>${Math.round(rel)} m</b> ${s.aboveSea}` : '');
@@ -687,26 +733,100 @@ function main() {
   const seaSlider = $('sea-slider'), seaNum = $('sea-num'), seaValue = $('sea-value');
   const aboutEl = $('about');
 
-  let lang = params.get('lang')
-    || localStorage.getItem('cl-lang')
-    || (navigator.language && navigator.language.startsWith('zh') ? 'zh' : 'en');
-  if (lang !== 'zh') lang = 'en';
+  function detectLang() {
+    const candidates = [
+      params.get('lang'),
+      localStorage.getItem('cl-lang'),
+      ...(navigator.languages || []),
+      navigator.language,
+    ];
+    for (const c of candidates) {
+      const m = matchLocale(c);
+      if (m) return m;
+    }
+    return 'en';
+  }
 
-  function applyLang() {
-    document.body.dataset.lang = lang;
-    const dict = I18N[lang];
+  async function loadLocale(code) {
+    if (LOCALES[code]) return LOCALES[code];
+    const res = await fetch(`locales/${code}.json`);
+    if (!res.ok) throw new Error(`locale ${code}: HTTP ${res.status}`);
+    const loc = await res.json();
+    LOCALES[code] = loc;
+    return loc;
+  }
+
+  const esc = (s) => String(s).replace(/[&<>"]/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // trusted HTML: locale files are authored content shipped with the app
+  function renderAbout(el, a) {
+    el.innerHTML = [
+      `<h2>${esc(a.title)}</h2>`,
+      `<p>${a.intro}</p>`,
+      `<h3>${esc(a.howTitle)}</h3>`,
+      `<ul>${a.how.map((li) => `<li>${li}</li>`).join('')}</ul>`,
+      `<h3>${esc(a.faqTitle)}</h3>`,
+      `<dl>${a.faq.map((f) => `<dt>${esc(f.q)}</dt><dd>${f.a}</dd>`).join('')}</dl>`,
+      `<h3>${esc(a.dataTitle)}</h3>`,
+      `<p>${a.data}</p>`,
+    ].join('');
+  }
+
+  const ATTR_I18N = [
+    ['sea-play', 'title', 'playTitle'], ['sea-play', 'aria-label', 'playTitle'],
+    ['sea-slider', 'aria-label', 'sliderAria'], ['sea-num', 'aria-label', 'numAria'],
+    ['collapse', 'title', 'collapseTitle'], ['collapse', 'aria-label', 'collapseTitle'],
+    ['zoom-in', 'title', 'zoomIn'], ['zoom-in', 'aria-label', 'zoomIn'],
+    ['zoom-out', 'title', 'zoomOut'], ['zoom-out', 'aria-label', 'zoomOut'],
+    ['zoom-globe', 'title', 'globeView'], ['zoom-globe', 'aria-label', 'globeView'],
+    ['about-close', 'aria-label', 'closeAria'],
+    ['lang', 'title', 'langLabel'], ['lang', 'aria-label', 'langLabel'],
+  ];
+
+  async function setLang(code) {
+    let loc;
+    try {
+      loc = await loadLocale(code);
+    } catch (err) {
+      console.error(err);
+      code = 'en';
+      loc = LOCALES.en;
+    }
+    lang = code;
+    dict = loc.ui;
+    document.documentElement.lang = code;
+    document.documentElement.dir = loc.dir || 'ltr';
+    document.body.dataset.lang = code;
+    document.title = dict.docTitle;
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.dataset.i18n;
       if (dict[key]) el.textContent = dict[key];
     });
-    $('lang').textContent = lang === 'en' ? '中文' : 'EN';
-    localStorage.setItem('cl-lang', lang);
+    for (const [id, attr, key] of ATTR_I18N) {
+      const el = $(id);
+      if (el && dict[key]) el.setAttribute(attr, dict[key]);
+    }
+    const dyn = $('about-dyn');
+    document.querySelector('#about-card article[data-lang="en"]').hidden = code !== 'en';
+    document.querySelector('#about-card article[data-lang="zh"]').hidden = code !== 'zh';
+    dyn.hidden = code === 'en' || code === 'zh';
+    if (!dyn.hidden && loc.about) renderAbout(dyn, loc.about);
+    $('lang').value = code;
+    localStorage.setItem('cl-lang', code);
+    if (!data) loaderText.textContent = dict.loading;
+    setSea(view.sea, false); // refresh aria-valuetext wording
   }
-  $('lang').addEventListener('click', () => {
-    lang = lang === 'en' ? 'zh' : 'en';
-    applyLang();
-  });
-  applyLang();
+
+  // populate the picker and apply the detected language
+  for (const [code, name] of LANGS) {
+    const opt = document.createElement('option');
+    opt.value = code;
+    opt.textContent = name;
+    $('lang').appendChild(opt);
+  }
+  $('lang').addEventListener('change', (ev) => setLang(ev.target.value));
+  setLang(detectLang());
 
   // Exponential slider: full planetary range, fine-grained near 0.
   // slider x in [-1, 1]  ->  sea = sign(x) * (e^(k|x|) - 1)/(e^k - 1) * side,
@@ -832,7 +952,7 @@ function main() {
   // ------------------------------------------------------------ loading
 
   const loader = $('loader'), loaderText = $('loader-text'), loaderFill = $('loader-fill');
-  loaderText.textContent = I18N[lang].loading;
+  loaderText.textContent = dict.loading;
 
   (async () => {
     try {
@@ -850,7 +970,7 @@ function main() {
       console.error(err);
       dataError = true;
       if (!data) {
-        loaderText.textContent = I18N[lang].loadFail + ' ' + err.message;
+        loaderText.textContent = dict.loadFail + ' ' + err.message;
         loaderFill.style.width = '0%';
       }
     }

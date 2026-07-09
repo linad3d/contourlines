@@ -1,0 +1,65 @@
+{
+  "name": "Français",
+  "dir": "ltr",
+  "ui": {
+    "tagline": "Faites glisser le niveau de la mer, redessinez le monde",
+    "seaLevel": "Niveau de la mer",
+    "iceAge": "Glaciation",
+    "today": "Aujourd’hui",
+    "allMelt": "Fonte totale",
+    "contourInterval": "Équidistance",
+    "auto": "Auto",
+    "highlight": "Littoral actuel",
+    "hillshade": "Estompage",
+    "graticule": "Quadrillage",
+    "about": "À propos",
+    "loading": "Chargement du terrain…",
+    "loadFail": "Échec du chargement des données de terrain.",
+    "underWater": "sous l’eau",
+    "aboveSea": "au-dessus de la mer",
+    "playTitle": "Animer le niveau de la mer",
+    "sliderAria": "Décalage du niveau de la mer, échelle exponentielle allant de la fosse des Mariannes au mont Everest",
+    "numAria": "Décalage du niveau de la mer en mètres, valeur exacte",
+    "collapseTitle": "Réduire le panneau",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "globeView": "Vue globe",
+    "closeAria": "Fermer",
+    "langLabel": "Langue",
+    "webglTitle": "WebGL2 requis",
+    "webglBody": "Contourlines a besoin de WebGL2 pour afficher la carte. Veuillez utiliser une version récente de Chrome, Edge, Firefox ou Safari et vérifier que l’accélération matérielle est activée.",
+    "docTitle": "Contourlines — Carte mondiale interactive en courbes de niveau et simulateur de montée des eaux"
+  },
+  "about": {
+    "title": "À propos de Contourlines",
+    "intro": "<strong>Contourlines</strong> est une <em>carte interactive de la Terre en courbes de niveau</em> doublée d’un <em>simulateur de montée du niveau de la mer</em>, gratuite et open source. Elle restitue les données réelles d’altitude et de profondeur des océans de la NOAA sous la forme d’une carte topographique classique — isolignes, teintes hypsométriques, estompage — qui défile sans interruption autour de la planète et se transforme en globe 3D lorsque vous dézoomez.",
+    "howTitle": "Comment l’utiliser",
+    "how": [
+      "<strong>Faites glisser</strong> la carte pour vous déplacer — elle se prolonge à l’infini, d’est en ouest.",
+      "<strong>Molette ou pincement</strong> pour zoomer. Entièrement dézoomée, la carte devient un globe.",
+      "<strong>Faites glisser le curseur du niveau de la mer</strong> pour faire monter ou baisser l’océan — l’échelle est exponentielle et couvre toute la planète, de la fosse des Mariannes (−11 000 m, océans entièrement vidés) au mont Everest (+8 848 m, tout est submergé). Littoraux, courbes de niveau et teintes hypsométriques se recalent instantanément sur le nouveau niveau de l’eau, tandis qu’une ligne de repère cramoisie continue d’indiquer l’emplacement du littoral actuel.",
+      "Essayez les préréglages : <strong>−120 m</strong> montre les littoraux de la dernière glaciation, avec des ponts terrestres comme la Béringie et le Doggerland ; <strong>+70 m</strong> montre le monde si toute la glace fondait."
+    ],
+    "faqTitle": "Questions fréquentes",
+    "faq": [
+      {
+        "q": "Que se passerait-il si toute la glace de la Terre fondait ?",
+        "a": "Le niveau de la mer monterait d’environ 70 mètres. Réglez le curseur sur +70 m et regardez les régions basses — les Pays-Bas, le Bangladesh, le delta du Nil, Shanghai, le sud de la Floride — disparaître sous le nouveau littoral."
+      },
+      {
+        "q": "Quel était le niveau de la mer lors de la dernière glaciation ?",
+        "a": "Environ 120 mètres plus bas qu’aujourd’hui. À −120 m, on peut marcher de la Sibérie à l’Alaska en traversant la Béringie, et la Grande-Bretagne rejoint l’Europe par le Doggerland."
+      },
+      {
+        "q": "Quelle est la précision de la simulation ?",
+        "a": "Les altitudes proviennent du modèle de relief global ETOPO1 de la NOAA, à une résolution de 5 minutes d’arc (environ 9 km par cellule). La simulation est un modèle statique dit « baignoire », à visée pédagogique — elle ignore les marées, les ondes de tempête, le rebond isostatique et les défenses côtières."
+      },
+      {
+        "q": "Le site me piste-t-il ou nécessite-t-il un serveur ?",
+        "a": "Non. Tout s’exécute localement dans votre navigateur grâce à WebGL2. Aucun cookie, aucune mesure d’audience, aucun compte."
+      }
+    ],
+    "dataTitle": "Données et crédits",
+    "data": "Altitude et bathymétrie : <a href=\"https://www.ncei.noaa.gov/products/etopo-global-relief-model\" target=\"_blank\" rel=\"noopener\">NOAA ETOPO1 Global Relief Model</a> (domaine public), NOAA National Centers for Environmental Information. Code source : <a href=\"https://github.com/linad3d/contourlines\" target=\"_blank\" rel=\"noopener\">sous licence MIT sur GitHub</a>."
+  }
+}
