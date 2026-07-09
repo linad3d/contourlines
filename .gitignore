@@ -1,0 +1,8 @@
+# local test tooling — not part of the published app
+node_modules/
+package.json
+package-lock.json
+
+# OS noise
+Thumbs.db
+.DS_Store

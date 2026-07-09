@@ -1,0 +1,12 @@
+{
+  "name": "Contourlines — World Contour Map & Sea Level Simulator",
+  "short_name": "Contourlines",
+  "description": "Interactive world contour map with real elevation data. Drag the sea level and watch the coastlines redraw.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0a0f1e",
+  "theme_color": "#0a0f1e",
+  "icons": [
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

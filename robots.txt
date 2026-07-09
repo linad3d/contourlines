@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://linad3d.github.io/contourlines/sitemap.xml

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Contourlines — Interactive World Contour Map &amp; Sea Level Rise Simulator</title>
+  <meta name="description" content="Explore Earth as a seamless, infinitely scrolling contour map built from real NOAA elevation and ocean depth data. Drag the sea level from −120 m (Ice Age) to +70 m (all ice melted) and watch coastlines flood or drain in real time. Zoom out and the map morphs into a 3D globe.">
+  <meta name="keywords" content="sea level rise simulator, contour map, topographic map, world elevation map, flood map, bathymetry, interactive globe, climate change visualization, ETOPO, ice age sea level, terrain map, isoline map">
+  <meta name="author" content="linad3d">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="theme-color" content="#0a0f1e">
+  <link rel="canonical" href="https://linad3d.github.io/contourlines/">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Contourlines">
+  <meta property="og:title" content="Contourlines — Drag the sea level, redraw the world">
+  <meta property="og:description" content="A seamless world contour map with real NOAA elevation + bathymetry data. Simulate sea level rise from −120 m to +70 m in real time, in your browser.">
+  <meta property="og:url" content="https://linad3d.github.io/contourlines/">
+  <meta property="og:image" content="https://linad3d.github.io/contourlines/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="World contour map with sea level controls, morphing into a globe">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contourlines — Drag the sea level, redraw the world">
+  <meta name="twitter:description" content="Seamless world contour map with real elevation + ocean depth data. Simulate sea level rise in real time.">
+  <meta name="twitter:image" content="https://linad3d.github.io/contourlines/assets/og-image.png">
+
+  <link rel="preload" href="data/elev-1080.png" as="fetch" type="image/png" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Contourlines",
+    "alternateName": "World Contour Map & Sea Level Simulator",
+    "url": "https://linad3d.github.io/contourlines/",
+    "description": "Interactive world contour map with real NOAA ETOPO elevation and bathymetry data. Seamlessly pan an infinitely wrapping map, zoom out to a 3D globe, and simulate sea level rise or fall from −11,000 m to +9,000 m in real time.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires WebGL2",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "screenshot": "https://linad3d.github.io/contourlines/assets/og-image.png",
+    "author": { "@type": "Person", "name": "linad3d", "url": "https://github.com/linad3d" },
+    "license": "https://github.com/linad3d/contourlines/blob/main/LICENSE",
+    "keywords": "sea level rise, contour map, topographic map, bathymetry, elevation, globe, climate visualization"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Contourlines?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Contourlines is a free, open-source interactive contour map of Earth. It renders real NOAA ETOPO elevation and ocean-depth data as a seamless, infinitely scrolling topographic map that morphs into a 3D globe when you zoom out, and lets you simulate sea level rise or fall in real time." }
+      },
+      {
+        "@type": "Question",
+        "name": "What would happen if all of Earth's ice melted?",
+        "acceptedAnswer": { "@type": "Answer", "text": "If all glaciers and ice sheets melted, global sea level would rise by roughly 70 meters. In Contourlines, set the sea level slider to +70 m to see low-lying regions such as the Netherlands, Bangladesh, Shanghai, and southern Florida go under water." }
+      },
+      {
+        "@type": "Question",
+        "name": "What was sea level during the last Ice Age?",
+        "acceptedAnswer": { "@type": "Answer", "text": "During the Last Glacial Maximum about 20,000 years ago, sea level was roughly 120 meters lower than today. Set the slider to −120 m to reveal ancient land bridges such as Beringia, Doggerland, and the Sunda shelf." }
+      },
+      {
+        "@type": "Question",
+        "name": "How accurate is the sea level simulation?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The map uses NOAA's ETOPO1 global relief model at 5-arc-minute resolution (about 9 km per cell). It is a static 'bathtub' model for education: it ignores tides, storm surge, glacial isostatic adjustment, levees, and erosion, so it should not be used for engineering or planning decisions." }
+      },
+      {
+        "@type": "Question",
+        "name": "What elevation data does Contourlines use?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Contourlines uses the public-domain NOAA ETOPO1 Global Relief Model, which combines land topography and ocean bathymetry, downsampled to a 4320 × 2160 grid and packed into a lossless PNG heightmap." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Contourlines free and open source?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes. Contourlines is MIT-licensed and runs entirely in your browser with no server, no tracking, and no dependencies. The source code is on GitHub at github.com/linad3d/contourlines." }
+      }
+    ]
+  }
+  </script>
+</head>
+<body data-lang="en">
+  <noscript>
+    <section class="noscript">
+      <h1>Contourlines — Interactive World Contour Map &amp; Sea Level Rise Simulator</h1>
+      <p>Contourlines renders real NOAA ETOPO elevation and bathymetry data as a seamless world
+      contour map. Pan endlessly around the planet, zoom out until the map becomes a 3D globe, and
+      drag the sea level anywhere from −120 m (Ice Age coastlines and land bridges) to +70 m (all
+      ice melted) to watch the world's coastlines redraw in real time. This application requires
+      JavaScript and WebGL2. The source code is available on
+      <a href="https://github.com/linad3d/contourlines">GitHub</a>.</p>
+    </section>
+  </noscript>
+
+  <canvas id="map" aria-label="Interactive world contour map"></canvas>
+
+  <div id="loader" role="status">
+    <svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true">
+      <g fill="none" stroke="#7fd4ff" stroke-width="1.6" opacity="0.9">
+        <ellipse cx="32" cy="32" rx="26" ry="26" opacity="0.35"/>
+        <path d="M14 40 Q 24 30 32 38 T 50 36"/>
+        <path d="M12 32 Q 26 20 36 30 T 52 28" opacity="0.7"/>
+        <path d="M18 24 Q 30 14 40 22 T 50 20" opacity="0.5"/>
+      </g>
+    </svg>
+    <div id="loader-text">Loading terrain…</div>
+    <div id="loader-bar"><div id="loader-fill"></div></div>
+  </div>
+
+  <header id="panel" class="glass">
+    <div id="panel-head">
+      <svg id="logo" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
+        <circle cx="32" cy="32" r="28" fill="#0e2a45"/>
+        <g fill="none" stroke="#7fd4ff" stroke-width="2.4" stroke-linecap="round">
+          <path d="M14 40 Q 24 30 32 38 T 50 36"/>
+          <path d="M12 31 Q 26 20 36 30 T 52 27" opacity="0.75"/>
+          <path d="M18 22 Q 30 13 40 21 T 49 19" opacity="0.5"/>
+        </g>
+      </svg>
+      <div>
+        <h1>Contourlines</h1>
+        <p id="tagline" data-i18n="tagline">Drag the sea level, redraw the world</p>
+      </div>
+      <button id="collapse" class="icon-btn" title="Collapse panel" aria-label="Collapse panel">▾</button>
+    </div>
+
+    <div id="panel-body">
+      <section class="ctl">
+        <div class="ctl-row">
+          <label for="sea-slider" data-i18n="seaLevel">Sea level</label>
+          <span id="sea-value" class="mono">0 m</span>
+        </div>
+        <div class="ctl-row">
+          <button id="sea-play" class="icon-btn" title="Animate sea level" aria-label="Animate sea level">▶</button>
+          <input id="sea-slider" type="range" min="-150" max="150" step="0.5" value="0"
+                 aria-label="Sea level offset in meters">
+          <input id="sea-num" type="number" min="-11000" max="8800" step="1" value="0"
+                 aria-label="Sea level offset, exact value">
+        </div>
+        <div class="presets">
+          <button class="preset" data-sea="-120"><b>−120 m</b><span data-i18n="iceAge">Ice Age</span></button>
+          <button class="preset" data-sea="0"><b>0 m</b><span data-i18n="today">Today</span></button>
+          <button class="preset" data-sea="70"><b>+70 m</b><span data-i18n="allMelt">Ice melted</span></button>
+        </div>
+      </section>
+
+      <section class="ctl">
+        <div class="ctl-row">
+          <label for="interval" data-i18n="contourInterval">Contour interval</label>
+          <select id="interval" aria-label="Contour interval">
+            <option value="0" selected data-i18n="auto">Auto</option>
+            <option value="50">50 m</option>
+            <option value="100">100 m</option>
+            <option value="200">200 m</option>
+            <option value="500">500 m</option>
+            <option value="1000">1000 m</option>
+          </select>
+        </div>
+        <div class="toggles">
+          <label class="toggle"><input type="checkbox" id="highlight" checked>
+            <span data-i18n="highlight">Highlight changes</span></label>
+          <label class="toggle"><input type="checkbox" id="hillshade" checked>
+            <span data-i18n="hillshade">Hillshade</span></label>
+          <label class="toggle"><input type="checkbox" id="graticule">
+            <span data-i18n="graticule">Grid lines</span></label>
+        </div>
+      </section>
+
+      <footer id="panel-foot">
+        <button id="lang" class="chip" title="切换语言 / Switch language">中文</button>
+        <button id="about-btn" class="chip" data-i18n="about">About</button>
+        <a class="chip" href="https://github.com/linad3d/contourlines" target="_blank" rel="noopener">GitHub ↗</a>
+      </footer>
+    </div>
+  </header>
+
+  <div id="readout" class="glass mono" hidden></div>
+
+  <div id="zoomctl" class="glass">
+    <button id="zoom-in" class="icon-btn" title="Zoom in" aria-label="Zoom in">+</button>
+    <button id="zoom-out" class="icon-btn" title="Zoom out" aria-label="Zoom out">−</button>
+    <button id="zoom-globe" class="icon-btn" title="Globe view" aria-label="Globe view">◐</button>
+  </div>
+
+  <div id="about" hidden>
+    <div id="about-card" class="glass">
+      <button id="about-close" class="icon-btn" aria-label="Close">✕</button>
+
+      <article data-lang="en">
+        <h2>About Contourlines</h2>
+        <p><strong>Contourlines</strong> is a free, open-source <em>interactive contour map of
+        Earth</em> and <em>sea level rise simulator</em>. It renders real NOAA elevation and ocean
+        depth data as a classic topographic map — isolines, hypsometric tints, hillshading — that
+        scrolls seamlessly around the planet and morphs into a 3D globe when you zoom out.</p>
+
+        <h3>How to use it</h3>
+        <ul>
+          <li><strong>Drag</strong> to pan — the map wraps endlessly, east to west.</li>
+          <li><strong>Scroll or pinch</strong> to zoom. Fully zoomed out, the map becomes a globe.</li>
+          <li><strong>Drag the sea level slider</strong> to raise or lower the ocean. Coastlines,
+          contour lines, and colors update instantly. Newly flooded land is tinted red, newly
+          exposed seabed green.</li>
+          <li>Try the presets: <strong>−120 m</strong> shows Ice Age coastlines with land bridges
+          like Beringia and Doggerland; <strong>+70 m</strong> shows the world if all ice melted.</li>
+        </ul>
+
+        <h3>Frequently asked questions</h3>
+        <dl>
+          <dt>What would happen if all of Earth's ice melted?</dt>
+          <dd>Sea level would rise about 70 meters. Set the slider to +70 m and watch low-lying
+          regions — the Netherlands, Bangladesh, the Nile delta, Shanghai, southern Florida —
+          disappear beneath the new coastline.</dd>
+          <dt>What was sea level during the last Ice Age?</dt>
+          <dd>About 120 meters lower than today. At −120 m you can walk from Siberia to Alaska
+          across Beringia, and Britain joins Europe across Doggerland.</dd>
+          <dt>How accurate is this?</dt>
+          <dd>Elevations come from NOAA's ETOPO1 Global Relief Model at 5-arc-minute resolution
+          (~9 km per cell). The simulation is a static "bathtub" model for education — it ignores
+          tides, storm surge, isostatic rebound, and coastal defenses.</dd>
+          <dt>Does it track me or need a server?</dt>
+          <dd>No. Everything runs locally in your browser with WebGL2. No cookies, no analytics,
+          no accounts.</dd>
+        </dl>
+
+        <h3>Data &amp; credits</h3>
+        <p>Elevation &amp; bathymetry: <a href="https://www.ncei.noaa.gov/products/etopo-global-relief-model"
+        target="_blank" rel="noopener">NOAA ETOPO1 Global Relief Model</a> (public domain), NOAA
+        National Centers for Environmental Information. Source code:
+        <a href="https://github.com/linad3d/contourlines" target="_blank" rel="noopener">MIT-licensed
+        on GitHub</a>.</p>
+      </article>
+
+      <article data-lang="zh">
+        <h2>关于 Contourlines</h2>
+        <p><strong>Contourlines</strong> 是一个免费开源的<em>交互式世界等高线地图</em>和<em>海平面升降模拟器</em>。
+        它把 NOAA 真实的陆地高程与海底深度数据渲染成经典的地形图 —— 等高线、分层设色、山体阴影 ——
+        地图可以东西方向无缝循环拖动，缩到最小时会变成一个三维地球。</p>
+
+        <h3>使用方法</h3>
+        <ul>
+          <li><strong>拖拽</strong>平移地图 —— 东西方向无限循环。</li>
+          <li><strong>滚轮或双指捏合</strong>缩放。缩到最小时，地图变形为地球。</li>
+          <li><strong>拖动海平面滑杆</strong>升高或降低海面，海岸线、等高线和配色即时更新。
+          新淹没的陆地显示为红色，新露出的海床显示为绿色。</li>
+          <li>试试预设：<strong>−120 m</strong> 重现冰河时期的海岸线（白令陆桥、多格兰）；
+          <strong>+70 m</strong> 展示所有冰盖融化后的世界。</li>
+        </ul>
+
+        <h3>常见问题</h3>
+        <dl>
+          <dt>如果地球上的冰全部融化会怎样？</dt>
+          <dd>海平面会上升约 70 米。把滑杆拉到 +70 m，就能看到荷兰、孟加拉、尼罗河三角洲、上海、
+          佛罗里达南部等低地被新海岸线淹没。</dd>
+          <dt>冰河时期的海平面是多少？</dt>
+          <dd>比今天低约 120 米。在 −120 m 时，西伯利亚与阿拉斯加之间的白令陆桥、英国与欧洲大陆之间的
+          多格兰都会浮出海面。</dd>
+          <dt>模拟有多精确？</dt>
+          <dd>高程数据来自 NOAA ETOPO1 全球地形模型，分辨率 5 弧分（约 9 公里/格）。这是一个用于科普的
+          静态"浴缸"模型，不考虑潮汐、风暴潮、地壳均衡回弹和海堤。</dd>
+          <dt>会跟踪我或需要服务器吗？</dt>
+          <dd>不会。一切都在浏览器本地通过 WebGL2 运行，没有 Cookie、没有统计、没有账号。</dd>
+        </dl>
+
+        <h3>数据与致谢</h3>
+        <p>高程与水深数据：<a href="https://www.ncei.noaa.gov/products/etopo-global-relief-model"
+        target="_blank" rel="noopener">NOAA ETOPO1 全球地形模型</a>（公共领域）。
+        源代码：<a href="https://github.com/linad3d/contourlines" target="_blank"
+        rel="noopener">GitHub（MIT 协议）</a>。</p>
+      </article>
+    </div>
+  </div>
+
+  <div id="webgl-error" class="glass" hidden>
+    <h2>WebGL2 required</h2>
+    <p>Contourlines needs WebGL2 to render the map. Please use a recent version of Chrome, Edge,
+    Firefox, or Safari, and make sure hardware acceleration is enabled.</p>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

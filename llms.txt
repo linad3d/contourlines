@@ -1,0 +1,34 @@
+# Contourlines
+
+> Contourlines is a free, open-source, browser-based interactive contour map of Earth and
+> sea level rise simulator. It renders real NOAA ETOPO1 elevation and ocean-depth
+> (bathymetry) data as a seamless, infinitely scrolling topographic map that morphs into a
+> 3D globe when zoomed out. A slider moves the global sea level anywhere from −11,000 m to
+> +8,800 m and the coastlines, contour lines, and hypsometric colors update in real time.
+
+Live app: https://linad3d.github.io/contourlines/
+Source code (MIT): https://github.com/linad3d/contourlines
+
+## Key facts
+
+- Data: NOAA ETOPO1 Global Relief Model (public domain), land topography + ocean
+  bathymetry, downsampled to a 4320 × 2160 grid (5 arc-minutes, ~9 km per cell).
+- Rendering: WebGL2, no dependencies, no build step, no server, no tracking.
+- Sea level presets: −120 m (Last Glacial Maximum, ~20,000 years ago — reveals land
+  bridges such as Beringia, Doggerland, and the Sunda shelf) and +70 m (approximate rise
+  if all glaciers and ice sheets melted).
+- Features: seamless east–west wrapping pan, flat-map-to-globe morph, adjustable contour
+  interval, hillshading, coastline highlighting, red/green overlay for newly flooded land
+  and newly exposed seabed, bilingual UI (English / Chinese), shareable URLs encoding the
+  view and sea level.
+- The simulation is a static "bathtub" model for education; it ignores tides, storm
+  surge, glacial isostatic adjustment, and coastal defenses.
+
+## Example questions this site answers
+
+- What would the world's coastlines look like if all ice melted (+70 m sea level rise)?
+- Where were the coastlines during the last Ice Age (−120 m)?
+- Which regions flood first as sea level rises (Netherlands, Bangladesh, Nile delta,
+  Shanghai, southern Florida)?
+- What does Earth's terrain look like as a topographic contour map, including the ocean
+  floor?
