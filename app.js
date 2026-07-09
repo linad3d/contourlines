@@ -286,10 +286,17 @@ async function fetchWithProgress(url, onProgress) {
 }
 
 async function decodeElevation(blob) {
-  const bmp = await createImageBitmap(blob, {
-    premultiplyAlpha: 'none',
-    colorSpaceConversion: 'none',
-  });
+  let bmp;
+  try {
+    bmp = await createImageBitmap(blob, {
+      premultiplyAlpha: 'none',
+      colorSpaceConversion: 'none',
+    });
+  } catch (_) {
+    // older Safari rejects the options bag; the PNG is fully opaque, so
+    // premultiplication is a no-op and a plain decode is still lossless
+    bmp = await createImageBitmap(blob);
+  }
   const W = bmp.width, H = bmp.height;
   const cnv = typeof OffscreenCanvas !== 'undefined'
     ? new OffscreenCanvas(W, H)
