@@ -40,9 +40,10 @@ is a real elevation model (NOAA ETOPO1), so it doubles as a **sea level rise sim
   a paper map into a cylinder.
 - 🌐 **Flat map ⇆ globe morph** — zoom all the way out and the map rolls itself onto an
   orthographic globe, with an atmosphere glow and stars.
-- 🔵🟢 **Change highlighting** — newly flooded land turns deep water-blue with fresh
-  isobaths drawn below the new shoreline, newly exposed seabed is tinted green, so the
-  impact of every meter is obvious.
+- 📍 **Unified relative mapping + reference coastline** — every color and contour is
+  computed from the *current* waterline (drained seafloor turns green → yellow → brown as
+  it climbs; flooded land becomes genuine shallow sea), while a crimson line keeps marking
+  today's 0 m coastline so the swallowed or reclaimed band is obvious at a glance.
 - 📏 **Live elevation readout** — hover anywhere to see latitude, longitude, elevation,
   and how far under the new sea surface it is.
 - 🔗 **Shareable URLs** — the view, sea level, and options are encoded in the address bar.
@@ -56,7 +57,7 @@ two PNG heightmaps.
 
 | Sea level +70 m — the ice has melted | Sea level −120 m — the last Ice Age |
 | :--: | :--: |
-| ![World map with sea level raised 70 meters, newly flooded coastal land tinted deep water-blue with fresh isobaths](assets/shot-melt.png) | ![World map with sea level lowered 120 meters, exposed continental shelf highlighted in green](assets/shot-iceage.png) |
+| ![World map with sea level raised 70 meters — flooded plains render as shallow sea between the red original-coastline reference and the new coast](assets/shot-melt.png) | ![World map with sea level lowered 120 meters — the exposed Sunda shelf in lowland colors, today's islands outlined in red](assets/shot-iceage.png) |
 
 | Contour detail with hillshading | Zoomed out to the globe |
 | :--: | :--: |
@@ -88,7 +89,7 @@ WebGL2 fragment shader      manual bilinear sampling → elevation field
                             • hypsometric tint relative to current sea level
                             • fwidth() anti-aliased contour lines & coastline
                             • screen-space hillshading
-                            • blue/green flood & exposure overlays
+                            • today's-coastline reference line
 WebGL2 vertex shader        lon/lat grid projected as equirectangular map or
                             orthographic globe — blended for the zoom-out morph
 ```
@@ -139,9 +140,10 @@ opinions about that. Don't use it for engineering, insurance, or evacuation plan
 - 基于 NOAA ETOPO1 真实高程与海底地形数据（约 9 公里分辨率）；
 - 地图东西方向无缝循环拖拽，缩到最小时变成三维地球；
 - 指数刻度滑杆覆盖整个星球：从排干的马里亚纳海沟（−11000 米）到被淹没的珠穆朗玛峰
-  （+8848 米），近海岸精细到米、越往两端变化越快，海岸线实时重绘；被淹没的陆地呈现
-  深蓝色水面并生成新的等深线，新露出的海床标绿；
+  （+8848 米），近海岸精细到米、越往两端变化越快，海岸线实时重绘；
 - 预设场景：−120 米（末次冰盛期，白令陆桥、巽他陆架浮现）、+70 米（冰盖全部融化）；
+- 全部配色与等高线以当前水面为零点统一重算：排干的海床会依相对高度呈现绿→黄→棕的
+  完整分层设色，被淹没的陆地则成为真正的浅海；红色参考线始终标注今日海岸线原位置；
 - 悬停可读取任意位置的海拔，以及相对当前海面的高度或深度；
 - 纯前端 WebGL2 实现，零依赖、无构建、无服务器、无跟踪，界面支持中英文切换。
 

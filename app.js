@@ -9,7 +9,7 @@
  * 16-bit elevation heightmap packed into the R/G channels of a PNG, applies
  * hypsometric tints relative to the current sea level, and draws
  * screen-space anti-aliased contour lines, coastline, hillshade,
- * flood/exposure highlights, and an optional graticule.
+ * a reference line marking today's coastline, and an optional graticule.
  */
 
 'use strict';
@@ -23,7 +23,7 @@ const I18N = {
     tagline: 'Drag the sea level, redraw the world',
     seaLevel: 'Sea level', iceAge: 'Ice Age', today: 'Today', allMelt: 'Ice melted',
     contourInterval: 'Contour interval', auto: 'Auto',
-    highlight: 'Highlight changes', hillshade: 'Hillshade', graticule: 'Grid lines',
+    highlight: "Today's coastline", hillshade: 'Hillshade', graticule: 'Grid lines',
     about: 'About', loading: 'Loading terrain…', loadFail: 'Failed to load terrain data.',
     underWater: 'under water', aboveSea: 'above sea',
   },
@@ -31,7 +31,7 @@ const I18N = {
     tagline: '拖动海平面，重绘世界',
     seaLevel: '海平面', iceAge: '冰河期', today: '现今', allMelt: '冰盖融化',
     contourInterval: '等高线间距', auto: '自动',
-    highlight: '高亮变化', hillshade: '山体阴影', graticule: '经纬网',
+    highlight: '今日海岸线', hillshade: '山体阴影', graticule: '经纬网',
     about: '关于', loading: '正在加载地形…', loadFail: '地形数据加载失败。',
     underWater: '低于海面', aboveSea: '高于海面',
   },
@@ -77,7 +77,7 @@ uniform float uInterval;
 uniform float uAlpha;
 uniform float uHillshade;
 uniform float uGraticule;
-uniform float uHighlight;
+uniform float uRefCoast;
 uniform float uMetersPerPx;
 out vec4 fragColor;
 
@@ -115,7 +115,7 @@ void main() {
   if (water) {
     col = texture(uLUT, vec2(sqrt(clamp(-rel / 11000.0, 0.0, 1.0)), 0.25)).rgb;
   } else {
-    col = texture(uLUT, vec2(sqrt(clamp(rel / 9000.0, 0.0, 1.0)), 0.75)).rgb;
+    col = texture(uLUT, vec2(sqrt(clamp(rel / 19850.0, 0.0, 1.0)), 0.75)).rgb;
   }
 
   if (uHillshade > 0.5) {
@@ -124,16 +124,6 @@ void main() {
     float lit = clamp(dot(n, normalize(vec3(-0.55, 0.62, 0.72))), 0.0, 1.0);
     float amt = water ? 0.20 : 0.52;
     col *= (1.0 - amt) + amt * (0.35 + 1.15 * lit);
-  }
-
-  // flooded land (deep water blue) / newly exposed seabed (green) — tinted
-  // before the contour pass so the new isobaths stay crisp on top
-  if (uHighlight > 0.5) {
-    float fw = max(fwidth(e), 1.0);
-    float flooded = smoothstep(0.0, fw, e) * smoothstep(0.0, fw, -rel);
-    float exposed = smoothstep(0.0, fw, -e) * smoothstep(0.0, fw, rel);
-    col = mix(col, vec3(0.09, 0.26, 0.52), flooded * 0.50);
-    col = mix(col, vec3(0.15, 0.65, 0.38), exposed * 0.40);
   }
 
   // contour lines relative to the current sea level: isolines above the new
@@ -148,6 +138,13 @@ void main() {
   // coastline at the current sea level
   float coast = 1.0 - smoothstep(0.0, 1.5, abs(rel) / max(fwidth(rel), 1e-7));
   col = mix(col, vec3(0.05, 0.23, 0.42), coast * 0.75);
+
+  // reference line marking today's (0 m) coastline while sea level != 0, so
+  // the flooded or reclaimed band between old and new coasts is obvious
+  if (uRefCoast > 0.5) {
+    float refc = 1.0 - smoothstep(0.0, 1.25, abs(e) / max(fwidth(e), 1e-7));
+    col = mix(col, vec3(0.80, 0.22, 0.14), refc * 0.78);
+  }
 
   if (uGraticule > 0.5) {
     vec2 gf = vLonLat / 15.0;
@@ -237,13 +234,21 @@ const OCEAN_STOPS = [
   [4000, [141, 193, 234]], [5000, [132, 185, 227]], [6000, [121, 178, 222]],
   [8000, [104, 163, 210]], [11000, [86, 146, 197]],
 ];
+// Land palette spans the full possible height above the waterline: with the
+// ocean drained to -11000 m, old seafloor can sit ~19850 m above the new sea,
+// so the ramp keeps stepping (brown -> red-brown -> rose grey -> warm grey)
+// instead of jumping to white after the yellows.
+const LAND_MAX = 19850;
 const LAND_STOPS = [
   [0, [172, 208, 165]], [50, [148, 191, 139]], [200, [168, 198, 143]],
   [500, [189, 204, 150]], [1000, [209, 215, 171]], [1500, [225, 228, 181]],
   [2000, [239, 235, 192]], [2500, [232, 225, 182]], [3000, [222, 214, 163]],
   [3500, [211, 202, 157]], [4000, [202, 185, 130]], [4500, [195, 167, 107]],
-  [5000, [185, 152, 90]], [5500, [170, 135, 83]], [6000, [172, 154, 124]],
-  [7000, [186, 174, 154]], [8000, [202, 195, 184]], [9000, [245, 244, 242]],
+  [5000, [185, 152, 90]], [5500, [170, 135, 83]], [6500, [158, 118, 76]],
+  [7500, [148, 103, 68]], [8500, [143, 94, 72]], [9500, [149, 100, 90]],
+  [11000, [161, 120, 110]], [12500, [173, 141, 130]], [14000, [186, 161, 150]],
+  [15500, [201, 181, 170]], [17000, [221, 206, 196]], [18500, [239, 233, 227]],
+  [19850, [250, 249, 247]],
 ];
 
 function buildLUT(gl) {
@@ -252,7 +257,7 @@ function buildLUT(gl) {
   for (let i = 0; i < W; i++) {
     const t = i / (W - 1);
     const oc = evalStops(OCEAN_STOPS, t * t * 11000);
-    const lc = evalStops(LAND_STOPS, t * t * 9000);
+    const lc = evalStops(LAND_STOPS, t * t * LAND_MAX);
     data.set([oc[0], oc[1], oc[2], 255], i * 4);
     data.set([lc[0], lc[1], lc[2], 255], (W + i) * 4);
   }
@@ -482,7 +487,7 @@ function main() {
     gl.uniform1f(mesh.u.uInterval, view.interval || autoInterval(view.s));
     gl.uniform1f(mesh.u.uHillshade, view.hillshade ? 1 : 0);
     gl.uniform1f(mesh.u.uGraticule, view.graticule ? 1 : 0);
-    gl.uniform1f(mesh.u.uHighlight, view.highlight && Math.abs(view.sea) > 0.01 ? 1 : 0);
+    gl.uniform1f(mesh.u.uRefCoast, view.highlight && Math.abs(view.sea) > 0.01 ? 1 : 0);
     gl.uniform1f(mesh.u.uMetersPerPx, 111320 / (view.s * dpr));
 
     const halfW = vw / 2 / view.s;

@@ -19,9 +19,10 @@ Source code (MIT): https://github.com/linad3d/contourlines
   bridges such as Beringia, Doggerland, and the Sunda shelf) and +70 m (approximate rise
   if all glaciers and ice sheets melted).
 - Features: seamless east–west wrapping pan, flat-map-to-globe morph, adjustable contour
-  interval with isobaths recomputed against the current sea level, hillshading, coastline
-  highlighting, deep-blue/green overlay for newly flooded land and newly exposed seabed,
-  bilingual UI (English / Chinese), shareable URLs encoding the view and sea level.
+  interval with all colors and isolines recomputed relative to the current waterline
+  (drained seafloor gets full green-to-brown hypsometric tints, flooded land becomes
+  genuine shallow sea), hillshading, a crimson reference line marking today's original
+  coastline, bilingual UI (English / Chinese), shareable URLs encoding view and sea level.
 - The simulation is a static "bathtub" model for education; it ignores tides, storm
   surge, glacial isostatic adjustment, and coastal defenses.
 
